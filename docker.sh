@@ -10,4 +10,6 @@ sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
 sudo mkdir -p /opt/appdata
 
-sudo cp -r "$THIS_DIRECTORY/swag" /opt/appdata/
+sudo cp -r "$THIS_DIRECTORY/docker/*" /opt/appdata/
+
+{ echo "\$PUID=$(id | sed 's/^uid=//;s/(.*$//')"; echo "\$PGID=$(id | sed 's/^.*=//;s/(.*$//')"; echo "\$TIMEZONE="; } >> "$HOME/.env"

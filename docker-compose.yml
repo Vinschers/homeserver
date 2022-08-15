@@ -7,17 +7,43 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=SWAG_TIMEZONE
-      - URL=SWAG_DNS
-      - VALIDATION=dns
-      - SUBDOMAINS=wildcard,
-      - DNSPLUGIN=cloudflare
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TIMEZONE
+      - URL=$SWAG_DNS
+      - VALIDATION=$SWAG_VALIDATION
+      - SUBDOMAINS=wildcard
+      - DUCKDNSTOKEN=$DUCKDNSTOKEN
       - ONLY_SUBDOMAINS=false
       - STAGING=false
     volumes:
       - /opt/appdata/swag:/config
+    ports:
+      - 443:443
+    restart: unless-stopped
+  duckdns:
+    image: lscr.io/linuxserver/duckdns:latest
+    container_name: duckdns
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TIMEZONE
+      - SUBDOMAINS=$DUCKDNSSUBDOMAIN
+      - TOKEN=$DUCKDNSTOKEN
+      - LOG_FILE=false
+    volumes:
+      - /opt/appdata/duckdns:/config
+    restart: unless-stopped
+  nextcloud:
+    image: lscr.io/linuxserver/nextcloud:latest
+    container_name: nextcloud
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TIMEZONE
+    volumes:
+      - /opt/appdata/nextcloud:/config
+      - /mnt/nextcloud:/data
     ports:
       - 443:443
     restart: unless-stopped
